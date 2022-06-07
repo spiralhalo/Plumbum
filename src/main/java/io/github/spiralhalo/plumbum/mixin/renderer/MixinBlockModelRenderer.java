@@ -47,10 +47,11 @@ public abstract class MixinBlockModelRenderer implements AccessBlockModelRendere
 	@Shadow
 	protected abstract void getQuadDimensions(BlockRenderView blockView, BlockState blockState, BlockPos blockPos, int[] vertexData, Direction face, float[] aoData, BitSet controlBits);
 
-	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLjava/util/Random;JI)Z", cancellable = true)
-	private void hookRender(BlockRenderView blockView, BakedModel model, BlockState state, BlockPos pos, MatrixStack matrix, VertexConsumer buffer, boolean checkSides, Random rand, long seed, int overlay, CallbackInfoReturnable<Boolean> ci) {
+	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V", cancellable = true)
+	private void hookRender(BlockRenderView blockView, BakedModel model, BlockState state, BlockPos pos, MatrixStack matrix, VertexConsumer buffer, boolean cull, net.minecraft.util.math.random.Random random, long seed, int overlay, CallbackInfo ci) {
 		BlockRenderContext context = plumbum_contexts.get();
-		ci.setReturnValue(context.render(blockView, model, state, pos, ((PoseStackExt) matrix).frx_asMatrixStack(), buffer, overlay, checkSides));
+		boolean render = context.render(blockView, model, state, pos, ((PoseStackExt) matrix).frx_asMatrixStack(), buffer, overlay, cull);
+		if (render) ci.cancel();
 	}
 
 	@Inject(at = @At("RETURN"), method = "<init>*")
