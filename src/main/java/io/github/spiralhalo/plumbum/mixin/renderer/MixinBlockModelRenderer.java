@@ -20,6 +20,7 @@ import io.github.spiralhalo.plumbum.renderer.accessor.AccessBlockModelRenderer;
 import io.github.spiralhalo.plumbum.renderer.aocalc.VanillaAoHelper;
 import io.github.spiralhalo.plumbum.renderer.render.BlockRenderContext;
 import io.vram.frex.mixinterface.PoseStackExt;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.BlockModelRenderer;
@@ -49,14 +50,18 @@ public abstract class MixinBlockModelRenderer implements AccessBlockModelRendere
 
 	@Inject(at = @At("HEAD"), method = "render(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;JI)V", cancellable = true)
 	private void hookRender(BlockRenderView blockView, BakedModel model, BlockState state, BlockPos pos, MatrixStack matrix, VertexConsumer buffer, boolean cull, net.minecraft.util.math.random.Random random, long seed, int overlay, CallbackInfo ci) {
-		BlockRenderContext context = plumbum_contexts.get();
-		boolean render = context.render(blockView, model, state, pos, ((PoseStackExt) matrix).frx_asMatrixStack(), buffer, overlay, cull);
-		if (render) ci.cancel();
+		if (!((FabricBakedModel) model).isVanillaAdapter()) {
+			BlockRenderContext context = plumbum_contexts.get();
+			// Note that we do not support face-culling here (so checkSides is ignored)
+
+			context.render(blockView, model, state, pos, ((PoseStackExt) matrix).frx_asMatrixStack(), buffer, overlay, cull);
+			ci.cancel();
+		}
 	}
 
 	@Inject(at = @At("RETURN"), method = "<init>*")
 	private void onInit(CallbackInfo ci) {
-		VanillaAoHelper.initialize((BlockModelRenderer) (Object) this);
+		VanillaAoHelper.initialize();
 	}
 
 	@Override

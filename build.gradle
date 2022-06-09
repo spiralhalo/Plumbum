@@ -37,6 +37,7 @@ dependencies {
     include("io.vram:frex-fabric-mc${project.minecraft_version.replace('.', '')}:${project.frex_vresion}:fat")
 
     // Fabric API
+    modImplementation(fabricApi.module("fabric-renderer-api-v1", project.fabric_version))
 	modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
 
     // For testing in dev environment
