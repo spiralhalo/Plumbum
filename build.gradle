@@ -33,10 +33,11 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // FREX
-    modImplementation("io.vram:frex-fabric-mc118:6.0.254")
-    include("io.vram:frex-fabric-mc118:6.0.254:fat")
+    modImplementation("io.vram:frex-fabric-mc${project.minecraft_version.replace('.', '')}:${project.frex_vresion}")
+    include("io.vram:frex-fabric-mc${project.minecraft_version.replace('.', '')}:${project.frex_vresion}:fat")
 
     // Fabric API
+    modImplementation(fabricApi.module("fabric-renderer-api-v1", project.fabric_version))
 	modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
 
     // For testing in dev environment
@@ -45,10 +46,10 @@ dependencies {
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 
-	modImplementation "maven.modrinth:sodium:mc1.18.2-0.4.1"
+	modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 
 	// Transitive dependency of Sodium
-	implementation("org.joml:joml:1.10.2")
+	implementation("org.joml:joml:${project.joml_version}")
 }
 
 processResources {

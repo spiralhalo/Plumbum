@@ -37,9 +37,7 @@ public class VanillaAoHelper {
 	// instance data and is called from multiple threads in vanilla also.
 	private static AccessBlockModelRenderer blockRenderer;
 
-	public static void initialize(BlockModelRenderer instance) {
-		blockRenderer = (AccessBlockModelRenderer) instance;
-
+	public static void initialize() {
 		final String target = FabricLoader.getInstance().getMappingResolver()
 				.mapClassName("intermediary", "net.minecraft.class_778$class_780");
 
@@ -52,7 +50,7 @@ public class VanillaAoHelper {
 					@Override
 					public AccessAmbientOcclusionCalculator get() {
 						try {
-							return (AccessAmbientOcclusionCalculator) constructor.newInstance(instance);
+							return (AccessAmbientOcclusionCalculator) constructor.newInstance();
 						} catch (Exception e) {
 							Plumbum.LOGGER.warn("[Plumbum] Exception accessing vanilla smooth lighter", e);
 							return null;

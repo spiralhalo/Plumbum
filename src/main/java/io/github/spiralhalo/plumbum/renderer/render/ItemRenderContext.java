@@ -72,7 +72,6 @@ public class ItemRenderContext extends BaseItemInputContext {
 		prepareForItem(model, itemStack, renderMode, lightmap, overlay, itemIsLeftHand, matrixStack);
 		computeOutputInfo();
 		materialMap = MaterialMap.get(itemStack);
-		final var itemTransforms = model.getTransformation();
 
 		// Magic
 		final boolean detachedPerspective = renderMode == Mode.GUI || renderMode == Mode.GROUND || renderMode == Mode.FIXED;
@@ -84,6 +83,8 @@ public class ItemRenderContext extends BaseItemInputContext {
 				model = models.getModel(Items.SPYGLASS);
 			}
 		}
+
+		final var itemTransforms = model.getTransformation();
 
 		// Transform
 		if (itemTransforms != null) {
